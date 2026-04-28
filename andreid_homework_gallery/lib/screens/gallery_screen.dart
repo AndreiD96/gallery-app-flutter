@@ -71,16 +71,18 @@ class _GalleryScreenState extends State<GalleryScreen> {
               case BlocStatus.success when state.photos.isEmpty:
                 return _buildEmptyState();
               case BlocStatus.success:
-                return switch (state.viewMode) {
-                  GalleryViewMode.grid => PhotoGridWidget(
-                    photos: state.photos,
-                    basePath: state.imagesBasePath,
-                  ),
-                  GalleryViewMode.list => PhotoListWidget(
-                    photos: state.photos,
-                    basePath: state.imagesBasePath,
-                  ),
-                };
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: state.viewMode == GalleryViewMode.grid
+                      ? PhotoGridWidget(
+                          photos: state.photos,
+                          basePath: state.imagesBasePath,
+                        )
+                      : PhotoListWidget(
+                          photos: state.photos,
+                          basePath: state.imagesBasePath,
+                        ),
+                );
             }
           },
         ),
