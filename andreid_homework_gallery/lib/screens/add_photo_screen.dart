@@ -49,6 +49,7 @@ class _InnerAddPhotoWidgetState extends State<_InnerAddPhotoWidget> {
         top: false,
         child: BlocConsumer<AddPhotoBloc, AddPhotoState>(
           listenWhen: (previous, current) =>
+              previous.blocStatus != current.blocStatus ||
               previous.photoToAdd != current.photoToAdd ||
               previous.errorMessage != current.errorMessage,
           listener: (context, state) {
@@ -63,7 +64,7 @@ class _InnerAddPhotoWidgetState extends State<_InnerAddPhotoWidget> {
                   metadata: state.metadata,
                 ),
               );
-            }else if (state.errorMessage != null) {
+            } else if (state.errorMessage != null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.errorMessage!)),
               );
@@ -78,8 +79,9 @@ class _InnerAddPhotoWidgetState extends State<_InnerAddPhotoWidget> {
               listenWhen: (previous, current) =>
                   previous.blocStatus != current.blocStatus,
               listener: (context, galleryState) {
-                if (addPhotoState.blocStatus != BlocStatus.success &&
-                    addPhotoState.lastAction != AddPhotoAction.save) {
+                final currentAddPhotoState = context.read<AddPhotoBloc>().state;
+                if (currentAddPhotoState.blocStatus != BlocStatus.success &&
+                    currentAddPhotoState.lastAction != AddPhotoAction.save) {
                   return;
                 }
 
